@@ -1,0 +1,183 @@
+# ============================================================
+# LancasterLink – Docker Compose Orchestration
+#
+# Services:
+#   frontend        – Nginx serving static UI + reverse proxy
+#   backend         – FastAPI REST API (Logic Processing layer)
+#   data-ingestion  – Background worker polling external APIs
+#   database        – PostgreSQL + PostGIS
+#   redis           – In-memory cache for live data & TTLs
+#
+# Usage:
+#   docker compose up -d            # Start all services
+#   docker compose up -d --build    # Rebuild and start
+#   docker compose logs -f backend  # Follow backend logs
+#   docker compose down -v          # Stop and remove volumes
+#
+# Requirements addressed:
+#   OD-01  Containerisation of all backend services
+#   OD-03  Resource-efficient (Alpine images, single-node)
+#   NFR-PL-03  Supports 5–10 concurrent users
+#   NFR-RA-01  Graceful degradation via separated services
+#   NFR-RA-02  Stale data expiry via Redis TTLs
+# ============================================================
+
+services:
+  # --------------------------------------------------------
+  # Frontend – Nginx + Static Web Application
+  # Serves the User Application layer (Sections 4a–4e)
+  # --------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lancasterlink-frontend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    networks:
+      - lancasterlink-net
+
+  # --------------------------------------------------------
+  # Backend – FastAPI REST API
+  # Logic Processing layer (3a–3d) + API endpoints (Section 6)
+  # Handles: route calculation, departures, live data serving
+  # --------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lancasterlink-backend
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --workers ${BACKEND_WORKERS:-4}
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-lancasterlink}:${POSTGRES_PASSWORD:-lancasterlink}@database:5432/${POSTGRES_DB:-lancasterlink}
+      - REDIS_URL=redis://redis:6379/0
+      - BODS_API_KEY=${BODS_API_KEY:-}
+      - NETWORK_RAIL_USER=${NETWORK_RAIL_USER:-}
+      - NETWORK_RAIL_PASS=${NETWORK_RAIL_PASS:-}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+    networks:
+      - lancasterlink-net
+
+  # --------------------------------------------------------
+  # Data Ingestion – Background Worker
+  # Management Layer (2a, 2b): polls external APIs, normalises
+  # data (DR-02), writes to database and Redis cache.
+  # Shares the same Docker image as 'backend' but runs a
+  # different entrypoint.
+  # --------------------------------------------------------
+  data-ingestion:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lancasterlink-data-ingestion
+    command: python -m app.ingestion
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-lancasterlink}:${POSTGRES_PASSWORD:-lancasterlink}@database:5432/${POSTGRES_DB:-lancasterlink}
+      - REDIS_URL=redis://redis:6379/0
+      - BODS_API_KEY=${BODS_API_KEY:-}
+      - NETWORK_RAIL_USER=${NETWORK_RAIL_USER:-}
+      - NETWORK_RAIL_PASS=${NETWORK_RAIL_PASS:-}
+      - POLLING_INTERVAL_SECONDS=${POLLING_INTERVAL_SECONDS:-30}
+      - STALE_DATA_TTL_SECONDS=${STALE_DATA_TTL_SECONDS:-300}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - lancasterlink-net
+
+  # --------------------------------------------------------
+  # Database – PostgreSQL + PostGIS
+  # Management Layer (2b, 2c): stores normalised timetables,
+  # NaPTAN/NPTG stops, routes, live positions, disruptions.
+  # Init scripts in ./database/init/ run on first start.
+  # --------------------------------------------------------
+  database:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: lancasterlink-database
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-lancasterlink}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-lancasterlink}
+      - POSTGRES_DB=${POSTGRES_DB:-lancasterlink}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lancasterlink} -d ${POSTGRES_DB:-lancasterlink}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - lancasterlink-net
+
+  # --------------------------------------------------------
+  # Redis – In-Memory Cache
+  # Caches live vehicle positions, departure boards, and
+  # API polling results. TTLs enforce stale data expiry
+  # (NFR-RA-02: 5-minute max age).
+  # --------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: lancasterlink-redis
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis-data:/data
+    networks:
+      - lancasterlink-net
+
+# --------------------------------------------------------
+# Volumes
+# --------------------------------------------------------
+volumes:
+  db-data:
+    driver: local
+  redis-data:
+    driver: local
+
+# --------------------------------------------------------
+# Networks
+# --------------------------------------------------------
+networks:
+  lancasterlink-net:
+    name: lancasterlink-net
+    driver: bridge
