@@ -1,0 +1,61 @@
+# ============================================================
+# LancasterLink – Docker Build Context Exclusions
+# Prevents unnecessary files from being sent to the Docker daemon
+# ============================================================
+
+# Version control
+.git
+.gitignore
+
+# Documentation
+docs/
+*.md
+*.pdf
+LICENSE
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+dist/
+build/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Node artifacts (frontend)
+node_modules/
+
+# IDE & editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Docker files (avoid recursive inclusion)
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile
+
+# Test data & coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Infrastructure config (not needed in container images)
+infrastructure/
