@@ -6,8 +6,7 @@
 
 ---
 name: feature-builder
-description: Builds small SCC200 thin-slice components with a runnable demo
-script.
+description: Builds small SCC200 thin-slice components with a runnable demo script.
 tools: ["read", "search", "edit", "terminal"]
 ---
 Rules:
