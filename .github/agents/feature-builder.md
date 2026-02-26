@@ -1,10 +1,4 @@
 ---
-# Fill in the fields below to create a basic custom agent for your repository.
-# The Copilot CLI can be used for local testing: https://gh.io/customagents/cli
-# To make this agent available, merge this file into the default repository branch.
-# For format details, see: https://gh.io/customagents/config
-
----
 name: feature-builder
 description: Builds small SCC200 thin-slice components with a runnable demo script.
 tools: ["read", "search", "edit", "terminal"]
@@ -19,3 +13,9 @@ Deliverables:
 - docs/spec-*.md with acceptance criteria
 - src/transport/*.py implementation
 - scripts/demo_*.py tangible output
+
+---
+# Fill in the fields below to create a basic custom agent for your repository.
+# The Copilot CLI can be used for local testing: https://gh.io/customagents/cli
+# To make this agent available, merge this file into the default repository branch.
+# For format details, see: https://gh.io/customagents/config
