@@ -1,0 +1,271 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border: 2px solid #333;
+    padding: 20px;
+}
+
+header {
+    margin-bottom: 20px;
+    padding-bottom: 0;
+}
+
+/* Navigation Tabs */
+.tabs {
+    display: flex;
+    gap: 0;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+}
+
+.search-section {
+    flex: 2;
+    border: 2px solid #333;
+    padding: 20px;
+    background-color: #e8d4d4;
+}
+
+.sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #333;
+    background-color: #ddd;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.tab-button:first-child {
+    border-right: none;
+}
+
+.tab-button:nth-child(2) {
+    border-right: none;
+}
+
+.tab-button.active {
+    background-color: #f5e6e6;
+}
+
+.tab-button:hover {
+    background-color: #ccc;
+}
+
+.tab-note {
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+/* Search Form */
+.search-form {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-left {
+    flex: 1;
+}
+
+.form-right {
+    flex: 1;
+    background-color: #f5e6e6;
+    padding: 15px;
+    border: 2px solid #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.input-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #333;
+    background-color: #f5e6e6;
+    font-size: 14px;
+}
+
+.note {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 5px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.datetime-group {
+    display: flex;
+    gap: 10px;
+}
+
+.time-button {
+    padding: 10px 20px;
+    border: 2px solid #333;
+    background-color: #f5e6e6;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.time-button:hover {
+    background-color: #e8d4d4;
+}
+
+.time-select {
+    padding: 10px;
+    border: 2px solid #333;
+    background-color: #f5e6e6;
+    font-size: 14px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.time-select:hover {
+    background-color: #e8d4d4;
+}
+
+/* Route Options */
+.route-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.route-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Search Button */
+.search-button {
+    width: 50%;
+    padding: 15px;
+    background-color: #ddd;
+    border: 2px solid #333;
+    cursor: pointer;
+    font-size: 16px;
+    display: block;
+    margin: 0 auto;
+}
+
+.search-button:hover {
+    background-color: #ccc;
+}
+
+/* Sidebar */
+.sign-button {
+    padding: 12px;
+    background-color: #ddd;
+    border: 2px solid #333;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.sign-button:hover {
+    background-color: #ccc;
+}
+
+.journey-section {
+    border: 2px solid #333;
+    padding: 15px;
+    background-color: #e8d4d4;
+    min-height: 150px;
+}
+
+.journey-section h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.journey-list {
+    min-height: 80px;
+    background-color: #f5e6e6;
+    padding: 10px;
+    border: 1px solid #999;
+}
+
+.journey-item {
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: white;
+    border: 1px solid #333;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.journey-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Radio buttons styling */
+input[type="radio"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        border-right: 2px solid #333;
+    }
+}
