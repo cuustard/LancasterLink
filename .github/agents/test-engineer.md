@@ -1,7 +1,6 @@
 ---
 name: test-engineer
-description: Tests-first agent. Adds deterministic unit/contract tests and
-runs pytest.
+description: Tests-first agent. Adds deterministic unit/contract tests and runs pytest.
 tools: ["read", "search", "edit", "terminal"]
 ---
 Rules:
