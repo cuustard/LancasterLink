@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Searcher</title>
+    <link rel="stylesheet" href="rpstyle.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <!-- Navigation Tabs -->
+            <div class="tabs">
+                <button class="tab-button active" data-tab="RoutePlanner">Route Planner</button>
+                <button class="tab-button" data-tab="Map">Map</button>
+                <button class="tab-button" data-tab="LiveDepartures">Live Departures</button>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <!-- Left Section: Search Form -->
+            <div class="search-section">
+
+                <!-- Search Form -->
+                <div class="search-form">
+                    <div class="form-left">
+                        <div class="input-group">
+                            <label>From</label>
+                            <input type="text" id="from-input" placeholder="Enter location">
+                        </div>
+
+                        <div class="input-group">
+                            <label>To</label>
+                            <input type="text" id="to-input" placeholder="Enter location">
+                        </div>
+                        <p class="note">Select end destination</p>
+
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="time-type" value="leave" checked>
+                                Leave at
+                            </label>
+                            <label>
+                                <input type="radio" name="time-type" value="arrive">
+                                Arrive by
+                            </label>
+                        </div>
+                        <p class="note">Input type Radio (only select 1)</p>
+
+                        <div class="datetime-group">
+                            <div class="input-group">
+                                <button class="time-button">Date</button>
+                            </div>
+                            <div class="input-group">
+                                <select id="time-select" class="time-select">
+                                    <option value="">Select time</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-right">
+                        <p class="note">Input type Radio (only select 1)</p>
+                        <div class="route-options">
+                            <label>
+                                <input type="radio" name="route-type" value="fastest" checked>
+                                Fastest Route
+                            </label>
+                            <label>
+                                <input type="radio" name="route-type" value="fewest">
+                                Fewest Transfers
+                            </label>
+                            <label>
+                                <input type="radio" name="route-type" value="accessible">
+                                Accessible Route
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="search-button">Search Button</button>
+            </div>
+
+            <!-- Right Section: Sidebar -->
+            <div class="sidebar">
+                <button class="sign-button">Sign in/out</button>
+                <p class="note">List. To quickly get back to previous journeys</p>
+                
+                <div class="journey-section">
+                    <h3>Recently Searched Journeys</h3>
+                    <div id="recent-journeys" class="journey-list"></div>
+                </div>
+
+                <div class="journey-section">
+                    <h3>Saved Journeys</h3>
+                    <div id="saved-journeys" class="journey-list"></div>
+                    <p class="note">User saves frequently used journeys</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="rpjava.js"></script>
+</body>
+</html>
