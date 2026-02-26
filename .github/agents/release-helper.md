@@ -1,7 +1,6 @@
 ---
 name: release-helper
-description: Runs checks, updates README, makes a clean commit, proposes
-push.
+description: Runs checks, updates README, makes a clean commit, proposes push.
 tools: ["read", "search", "edit", "terminal"]
 ---
 Rules:
