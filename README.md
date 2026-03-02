@@ -17,3 +17,8 @@ Follow these steps to run the project on your machine.
     - Run: `npm run dev`
     - You should see something like: `Local: http://localhost:3000`
     - Open that link in your browser.
+
+
+TODO:
+Add .gitignore
+Add CI/CD
