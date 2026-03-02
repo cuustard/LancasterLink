@@ -36,3 +36,6 @@ pydantic-settings>=2.2,<3.0
 pytest>=8.0,<9.0
 pytest-asyncio>=0.23,<1.0
 httpx                            # Also used as AsyncClient in tests
+
+# --- Security / Cryptography ---
+bcrypt>=4.0
