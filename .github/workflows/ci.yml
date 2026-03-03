@@ -1,0 +1,35 @@
+name: CI Pipeline
+
+# This workflow runs on pushes and pull requests to the main branch.
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    # Use the latest Ubuntu runner
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repo so workflow can access the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Python environment using version 3.13
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      # Install dependencies from requirements.txt if present, ensure bcrypt installed too
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+          pip install bcrypt pytest
+
+      # Run the test suite with verbose output
+      - name: Run tests
+        run: python -m pytest tests/ -v
