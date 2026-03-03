@@ -1,6 +1,6 @@
 # Running LancasterLink Locally
 
-Follow these steps to run the project on your machine.
+**Follow these steps to run the project on your machine**
 
 1. Install Node.js
     - Make sure you have **Node.js** installed.
@@ -19,6 +19,11 @@ Follow these steps to run the project on your machine.
     - Open that link in your browser.
 
 
-TODO:
-Add .gitignore
-Add CI/CD
+# Running Backend Tests*
+
+**Running all tests before pushing**
+Run the full collection of Python tests from the workspace root:
+```bash
+python -m pytest tests -v
+```
+This covers every unit and integration test under `tests/` with verbose output.  
