@@ -19,11 +19,20 @@
     - Open that link in your browser.
 
 
-# Running Backend Tests*
+# Running All Tests
 
 **Running all tests before pushing**
 Run the full collection of Python tests from the workspace root:
 ```bash
 python -m pytest tests -v
 ```
-This covers every unit and integration test under `tests/` with verbose output.  
+This covers every unit and integration test under `tests/` with verbose output.
+
+
+# Issues With the Project
+
+Any issues with the project please raise in the **Issues** tab at the top of the github.
+
+# Running The Project
+
+Anything that needs to be done to either run or test the project please put in the **readme.md**
